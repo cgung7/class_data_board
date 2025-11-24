@@ -1,0 +1,35 @@
+[33mcommit 7740625b650f6c3b24963bb2c0495cc8943cae42[m
+Author: cgung7 <cgung7@naver.com>
+Date:   Mon Nov 24 15:39:43 2025 +0900
+
+    1124board OAuth2 Info
+
+[33mcommit 523923bb43fa52efd65b3ad578aad35bec6e07fb[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: cgung7 <cgung7@naver.com>
+Date:   Mon Nov 24 14:11:52 2025 +0900
+
+    1124board application-properties
+
+[33mcommit 798a0bbdaf3dfebd9be0879b105a67b8f58fd329[m
+Author: cgung7 <cgung7@naver.com>
+Date:   Mon Nov 24 12:34:29 2025 +0900
+
+    1124board security updateDB
+
+[33mcommit d99f5895dfc68862697ccad7e14967d3a414b018[m
+Author: cgung7 <cgung7@naver.com>
+Date:   Mon Nov 24 11:04:42 2025 +0900
+
+    1124board webSecurityConfig
+
+[33mcommit 3b6207d44d8e2d7a5d7213cd751db59d283c2279[m
+Author: cgung7 <cgung7@naver.com>
+Date:   Mon Nov 24 10:25:20 2025 +0900
+
+    1124board webSecurityConfig
+
+[33mcommit 0b46ff3b1c33af05a0b7221e488191625d94c4ea[m
+Author: cgung7 <cgung7@naver.com>
+Date:   Mon Nov 24 10:24:17 2025 +0900
+
+    first commit

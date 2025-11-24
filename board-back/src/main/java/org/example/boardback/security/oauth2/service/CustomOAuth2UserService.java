@@ -3,9 +3,14 @@ package org.example.boardback.security.oauth2.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.boardback.common.enums.AuthProvider;
+import org.example.boardback.common.enums.RoleType;
+import org.example.boardback.entity.user.Role;
 import org.example.boardback.entity.user.User;
 import org.example.boardback.repository.user.RoleRepository;
 import org.example.boardback.repository.user.UserRepository;
+import org.example.boardback.security.oauth2.user.GoogleOAuth2UserInfo;
+import org.example.boardback.security.oauth2.user.KakaoOAuth2UserInfo;
+import org.example.boardback.security.oauth2.user.NaverOAuth2UserInfo;
 import org.example.boardback.security.oauth2.user.OAuth2UserInfo;
 import org.example.boardback.security.user.UserPrincipalMapper;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -53,15 +58,68 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private AuthProvider mapProvider(String registrationId) {
-
+        return switch (registrationId.toLowerCase()) {
+            case "google" ->AuthProvider.GOOGLE;
+            case "kakao" -> AuthProvider.KAKAO;
+            case "naver" -> AuthProvider.NAVER;
+            default -> throw new IllegalArgumentException("지원하지 않는 provider: " + registrationId);
+        };
     }
 
     private OAuth2UserInfo convertToUserInfo(AuthProvider provider, Map<String, Object> attributes) {
-
+        return switch (provider) {
+            case GOOGLE -> new GoogleOAuth2UserInfo(attributes);
+            case KAKAO -> new KakaoOAuth2UserInfo(attributes);
+            case NAVER -> new NaverOAuth2UserInfo(attributes);
+            default -> throw new IllegalArgumentException("지원하지 않는 provider: " + provider);
+        };
     }
 
+    /**
+     * provider + providerId를 기준으로 User를 조회하여
+     *
+     * 1) 이미 존재하면: 이름/이메일 등 프로필 정보를 최산 상태로 업데이트
+     * 2) 존재하지 않으면: 신규 소셜 로그인 User를 생성한 뒤 ROLE_USER 부여
+     *
+     * 최종적으로 User 엔티티 반환
+     * */
     @Transactional
     protected User upsertUser(AuthProvider provider, OAuth2UserInfo userInfo) {
+        // 소셜 서비스에서 제공하는 고유 사용자 ID (구글 sub, 카카오 id 등)
+        String providerId =userInfo.getId();
 
+        // 소셜에서 가져온 데이터 저장
+        String email = userInfo.getEmail();
+        String name = userInfo.getName();
+
+        // provider + providerId 조합으로 User 조회
+        // - 동일 provider 안에는 providerId가 유니크
+        // - 다른 provider는 providerId가 같더라도 구분 가능
+        return userRepository.findByProviderAndProviderId(provider, providerId)
+                .map(user -> {
+                    // 1) 이미 가입된 유저인 경우
+                    //      : 이름, 이메일 같은 프로필 정보를 최신값으로 갱신
+                    user.updateOauthProfile(name, email);
+                    return user;
+                })
+                .orElseGet(() -> {
+                    // 2) 처음 로그인하는 유저인 경우 -> 새 User 엔티티 생성
+                    User newUser = User.createOauthUser(
+                          provider,
+                          providerId,
+                          email,
+                          name
+                    );
+
+                    // 기본 권한 ROLE_USER를 DB에서 조회
+                    Role userRole = roleRepository
+                            .findById(RoleType.USER)
+                            .orElseThrow(() -> new IllegalArgumentException("ROLE_USER가 DB에 없습니다."));
+
+                    // 생성된 유저에게 ROLE_USER 권한 부여
+                    newUser.grantRole(userRole);
+
+                    return userRepository.save(newUser);
+                });
     }
 }
