@@ -9,9 +9,10 @@ package org.example.boardback.보안시스템;
  *
  * 1. 전체 구조: 예) 학교 시스템 비유
  *      회원가입   - "학생부"에 이름 등록하기
- *      로그인     - "학생증" 발급 받기
+ *      로그인     - "학생증" 발급 받기 / 로그인 성공 시 JWT Token 발급
  *
- *      AccessToken) (복도 돌아다닐 때 보여주는)1일짜리 학생증 (학생이 소지)
+ *      // 학교 복도: 웹 서버 / 애플리케이션의 요청 처리 흐름
+ *      AccessToken) (복도 돌아다닐 때 보여주는)1일짜리 학생증 (학생이 소지) / 매 요청마다 서버가 사용자 확인
  *      RefreshToken) 학생증 재발급 권한 기록 (교무실에 보관)
  *
  *      JWT 필터: JwtAuthenticationFilter) (복도에서) 학생증(token) 검사를 하는 "선도부"
@@ -73,6 +74,28 @@ package org.example.boardback.보안시스템;
  *
  *      [ 동작 순서 ]
  *      1) 요청 헤더에서 토큰 뽑기
+ *          : HttpServletRequest(요청)에 있는 Authorization을 꺼내서
+ *              , "Bearer " 문자 제거 후 반환
+ *
+ *      2) JWTProvider로 토큰 유효성 검사
+ *          + 토큰 안에 있는 username값 추출하여 반환
+ *
+ *      3) UserPrincipalMapper로 DB에서 유저 정보 조회
+ *          >> UserPrincipal 생성
+ *
+ *      4) SecurityContext에 인증 정보 저장
+ *          >> SecurityContextHolder 내부의 context에 저장
+ *          >> 저장할 데이터 형식이 UsernamePasswordAuthenticationToken 형식
+ *
+ *      5) 컨트롤러에서 @AuthenticationPrincipal 등으로 현재 유저 정보 사용 가능
+ *
+ *      ※ 내 요청에 AccessToken이 실려 있으면, 해당 필터가 "로그인된 상태"로 만들어 주고
+ *          , 없으면 그냥 "비 로그인 상태"로 컨트롤러 까지 전달됨 ※
+ *
+ *  2-4. 회원가입 흐름 (AuthServiceImpl.signup())
+ *
+ *
+ *  2-5. 로그인 흐름 (AuthServiceImpl.login())
  *
  *
  * */
