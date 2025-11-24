@@ -38,6 +38,42 @@ package org.example.boardback.보안시스템;
  *          - 지금 방식: 서버는 세션 안 쓰고, 매 요청마다 JWT 검사
  *                  > 선도부/선생님은 기억이 없음 - 학생증(토큰) 자체에 정보가 들어있음
  *
+ *      2) 어떤 URL은 누구나, 어떤 URL은 로그인 필요인지 설정
+ *
+ *      3) JWTAuthenticationFilter를 필터 체인에 추가
+ *          - 모든 요청이 컨트롤러에 도달하기 전에 JWTAuthenticationFilter가 먼저 "학생증 검사"를 수행
+ *
+ *      4) 예외 처리 핸들러 연결
+ *          인증 안됨) JsonAuthenticationEntryPoint     - 401 (Unauthorized)
+ *          권한 없음) JsonAccessDeniedHandler          - 403 (Forbidden)
+ *          >> 둘 다 JSON 형태로 에러 응답을 반환하기 때문에 프론트에서 처리하기 쉬움
+ *
+ *  2-2. JWTProvider 역할
+ *      : Access Token / Refresh Token / Email 인증 토큰을 만들고 검증하는 역할
+ *
+ *      1) 토큰에 담기는 정보
+ *          subject: username(로그인 아이디)
+ *          roles: 권한(ROLE_USER, ROLE_ADMIN 등)
+ *          iat: 발급 시각
+ *          exp: 만료 시간
+ *
+ *      2) 생성 메서드들
+ *          generateAccessToken: 짧은 만료 시간
+ *          generateRefreshToken: 긴 만료시간
+ *          generateEmailJWTToken: 이메일 인증 / 비밀번호 재설정 등에 사용
+ *
+ *      3) 검증 메서드들
+ *          ifValidToken(String token): 서명 검사 + 만료시간 채크 >> 문제 없으면 true
+ *          getUsernameFronJWT(String token): 토큰 안에 들어있는 username(subject) 꺼냄
+ *          getRemainingMillis(String token): 만료까지 남은 시간
+ *          removeBearer(String bearerToken): "Bearer "까지 제거
+ *
+ *  2-3. JWTAuthenticationFilter 역할
+ *      : 매 요청 마다 token 검사를 하는 역할 (학생증 검사)
+ *
+ *      [ 동작 순서 ]
+ *      1) 요청 헤더에서 토큰 뽑기
+ *
  *
  * */
 
