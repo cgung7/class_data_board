@@ -25,35 +25,41 @@ function OAuth2CallbackPage() {
   // 해당 컴포넌트 페이지 렌더링 시
   // : accessToken과 user 데이터 저장
   useEffect(() => {
-    // 1) 백엔드에서 redirect 시 함께 전달한 accessToken 읽기
-    const accessToken = searchParmas.get("accessToken");
+    const handleOAuthCallback = async () => {
+      // 1) 백엔드에서 redirect 시 함께 전달한 accessToken 읽기
+      const accessToken = searchParmas.get("accessToken");
+  
+      // 2) accessToken 없으면 로그인 실패
+      if (!accessToken) {
+        navigate("/login?error=oauth2");
+        return;
+      }
 
-    // 2) accessToken 없으면 로그인 실패
-    if (!accessToken) {
-      navigate("/login?error=oauth2");
-      return;
-    }
-
-    (async () => {
-      try {
-        // 3) AccessToken 저장
-        setAccessToken(accessToken);
-
-        // 4) 사용자 정보(/me)에 요청하여 상태 동기화
-        const data = await userApi.me();
-
-        if (data.data) {
-          setUser(data.data);
-        } else {
+      (async () => {
+        try {
+          // 3) AccessToken 저장
+          setAccessToken(accessToken);
+  
+          // 4) 사용자 정보(/me)에 요청하여 상태 동기화
+          const { data } = await userApi.me();
+  
+          if (!data) {
+            navigate("/login?error=oauth2_me");
+            return;
+          } 
+          setUser(data);
+  
+          // 메인 페이지로 이동
+          navigate("/", { replace: true });
+  
+        } catch (e) {
+          // me 조회 실패 시
           navigate("/login?error=oauth2_me")
         }
+      });
+    }
 
-      } catch (e) {
-        // me 조회 실패 시
-        navigate("/login?error=oauth2_me")
-      }
-    })();
-
+    handleOAuthCallback();
   }, [searchParmas, navigate, setAccessToken, setUser])
 
   return (

@@ -41,7 +41,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final RefreshTokenRepository refreshTokenRepository;
 
     // 정의된 리다이렉트 URI 값을 주입
-    @Value("${app.oauth2.authorized-redirect-url}")
+    @Value("${app.oauth2.authorized-redirect-uri}")
     private String redirectUrl;
 
     // 리프레시 토큰을 담을 쿠기 이름 상수: HttpONLY 쿠키

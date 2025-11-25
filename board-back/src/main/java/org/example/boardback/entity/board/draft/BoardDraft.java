@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.boardback.entity.base.BaseTimeEntity;
 import org.example.boardback.entity.user.User;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(
@@ -28,6 +30,7 @@ public class BoardDraft extends BaseTimeEntity {
     private String title;
 
     @Lob
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     @Column(nullable = true)
     private String content;
 

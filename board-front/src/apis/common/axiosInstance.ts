@@ -8,6 +8,9 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8080';
 export const publicApi = axios.create({
   baseURL: API_BASE,
   withCredentials: true,  // refreshToken 쿠키 전달
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export const privateApi = axios.create({

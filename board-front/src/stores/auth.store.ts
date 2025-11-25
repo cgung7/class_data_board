@@ -1,8 +1,7 @@
 // src/store/auth.store.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { MeResponse } from "@/types/user/user.dto";
-import type { LoginResponse } from "@/types/auth/auth.dto";
+import type { MeResponse } from "@/types/user/user.dto"; 
 
 // 상태 관리 데이터
 type AuthState = {

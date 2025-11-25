@@ -51,20 +51,20 @@ public class User extends BaseTimeEntity {
     // 프로필 이미지 파일 매핑
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_file_id",
-        foreignKey = @ForeignKey(name = "fk_users_profile_file"))
+            foreignKey = @ForeignKey(name = "fk_users_profile_file"))
     private FileInfo profileFile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserRole> userRoles = new HashSet<>();
 
     // OAuth2 필드
-    // 1) 가입 경로 (LOCAL, GOOGLE, KAKAO, NAVER)
+    // 1) 가입 경로 (LOCAL / GOOGLE / KAKAO / NAVER)
     @Enumerated(EnumType.STRING)
     @Column(name = "provider", length = 20, nullable = false)
     private AuthProvider provider;
 
     // 2) 각 provider가 주는 유니크 ID
-    @Column(name = "providerId", length = 100)
+    @Column(name = "provider_id", length = 100)
     private String providerId;
 
     // 3) 이메일 인증 여부 (소셜은 대부분 true 처리)
@@ -116,7 +116,6 @@ public class User extends BaseTimeEntity {
         this.nickname = name;
         this.email = email;
     }
-
 
     // == 도메인 로직 == //
     public void changePassword(String password) {

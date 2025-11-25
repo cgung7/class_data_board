@@ -2,8 +2,8 @@ import { authApi } from "@/apis/auth/auth.api";
 import { userApi } from "@/apis/user/user.api";
 import { SocialLoginButtons } from "@/components/SocialLoginButtons";
 import { useAuthStore } from "@/stores/auth.store";
-import type { UserCreateForm, UserLoginForm } from "@/types/user/user.type";
-import React, { useEffect, useState } from "react";
+import type { UserLoginForm } from "@/types/user/user.type";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // 로그인
@@ -24,10 +24,12 @@ function LoginPage() {
   // 페이지 이동 훅
   const navigate = useNavigate();
 
-  const { setAccessToken, setUser } = useAuthStore(s => ({
-    setAccessToken: s.setAccessToken,
-    setUser: s.setUser
-  }))
+  // const { setAccessToken, setUser } = useAuthStore(s => ({
+  //   setAccessToken: s.setAccessToken,
+  //   setUser: s.setUser
+  // }))
+  const setAccessToken = useAuthStore(s => s.setAccessToken);
+  const setUser = useAuthStore(s => s.setUser);
 
   // Zustand store 상태와 액션 가져오기
   // const { setAccessToken, setUser, hydrateFromStorage, isInitialized } =

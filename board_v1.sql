@@ -77,7 +77,7 @@ CREATE TABLE users (
 # === ROLES (권한) === #
 CREATE TABLE roles (
 	role_name VARCHAR(30) PRIMARY KEY,
-    CONSTRAINT `chk_roles_role_name` CHECK(role_name IN ('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MANAGER'))
+    CONSTRAINT `chk_roles_role_name` CHECK(role_name IN ('USER', 'ADMIN', 'MANAGER'))
 )
 	ENGINE=InnoDB
     DEFAULT CHARSET = utf8mb4

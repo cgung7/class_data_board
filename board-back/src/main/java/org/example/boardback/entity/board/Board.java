@@ -9,6 +9,8 @@ import org.example.boardback.entity.base.BaseTimeEntity;
 import org.example.boardback.entity.board.like.BoardLike;
 import org.example.boardback.entity.comment.Comment;
 import org.example.boardback.entity.user.User;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +34,7 @@ public class Board extends BaseTimeEntity {
     private String title;
 
     @Lob
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     @Column(nullable = false)
     private String content;
 

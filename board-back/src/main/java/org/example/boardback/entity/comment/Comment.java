@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.example.boardback.entity.base.BaseTimeEntity;
 import org.example.boardback.entity.board.Board;
 import org.example.boardback.entity.user.User;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(
@@ -26,6 +28,7 @@ public class Comment extends BaseTimeEntity {
     private Long id;
 
     @Lob
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     @Column(nullable = false)
     private String content;
 

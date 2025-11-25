@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -81,6 +82,14 @@ public class WebSecurityConfig {
         return source;
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web -> web.ignoring().requestMatchers(
+                "/favicon.ico",
+                "/error"
+        ));
+    }
+
     /* ============================ */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) throws Exception {
@@ -119,6 +128,8 @@ public class WebSecurityConfig {
                             "/login/oauth2/code/**",
                             "/error").permitAll()
                     .requestMatchers(HttpMethod.GET, "api/v1/boards/**").permitAll() // 게시판 조회 기능
+                    .requestMatchers("/login", "/login/**").permitAll()
+
 
                     // 인증된 사용자만 사용 가능 (인가, 권한 X)
                     // : HttpMethod는 선택값, URL 경로는 필수
