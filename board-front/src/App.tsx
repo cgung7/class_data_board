@@ -1,9 +1,13 @@
-import { useAuthInitQuery } from "@/hooks/auth/useAuthInitQuery";
+import { SocialLoginButtons } from "./components/SocialLoginButtons";
+import LoginPage from "./pages/LoginPage";
+import { useAuthStore } from "./stores/auth.store";
 
 export default function App() {
-  const { data: isLoggedIn, isLoading } = useAuthInitQuery();
+  const { isInitialized, accessToken, user } = useAuthStore();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (!isInitialized) return <div>Loading...</div>;
+
+  const isLoggedIn = Boolean(accessToken && user);
 
   return (
     <>
@@ -16,6 +20,7 @@ export default function App() {
         // <AuthRouter />  // 로그인 필요
         <>
           로그인 필요
+          <LoginPage />
         </>
       )}
     </>

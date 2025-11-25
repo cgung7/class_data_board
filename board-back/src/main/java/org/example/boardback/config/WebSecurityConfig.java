@@ -109,7 +109,15 @@ public class WebSecurityConfig {
             auth
                     // .permitAll(): 인증/인가 없이 모두 가능
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/api/v1/auth/**").permitAll()         // 로그인, 회원가입 등 - 인증 서비스
+                    /**
+                     * 인증불필요
+                     * : permitAll()
+                     * */
+                    .requestMatchers(
+                            "/api/v1/auth/**",
+                            "/oauth2/**",
+                            "/login/oauth2/code/**",
+                            "/error").permitAll()
                     .requestMatchers(HttpMethod.GET, "api/v1/boards/**").permitAll() // 게시판 조회 기능
 
                     // 인증된 사용자만 사용 가능 (인가, 권한 X)
