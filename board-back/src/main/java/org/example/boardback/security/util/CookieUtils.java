@@ -18,11 +18,11 @@ public class CookieUtils {
     }
 
     public static void addHttpOnlyCookie(
-            HttpServletResponse response,
-            String name,
-            String value,
-            int maxAge,
-            boolean secure
+        HttpServletResponse response,
+        String name,
+        String value,
+        int maxAge,
+        boolean secure
     ) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
                 .httpOnly(true)

@@ -26,5 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             left join fetch ur.role r
         where u.username = :username
     """)
-    Optional<User> findByRolesByUsername(@Param("username") String username);
+    Optional<User> findWithRolesByUsername(@Param("username") String username);
 }

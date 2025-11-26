@@ -26,7 +26,7 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
         if (profile == null) return null;
 
-        return (String) kakaoAccount.get("nickname");
+        return (String) profile.get("nickname");
     }
 
     @Override
@@ -36,6 +36,6 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
         if (profile == null) return null;
 
-        return (String) kakaoAccount.get("profile_image_url");
+        return (String) profile.get("profile_image_url");
     }
 }

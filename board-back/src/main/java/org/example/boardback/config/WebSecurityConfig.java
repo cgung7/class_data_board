@@ -118,18 +118,20 @@ public class WebSecurityConfig {
             auth
                     // .permitAll(): 인증/인가 없이 모두 가능
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                     /**
-                     * 인증불필요
-                     * : permitAll()
+                     * 인증 불필요
+                     * : permitAll
                      * */
                     .requestMatchers(
                             "/api/v1/auth/**",
                             "/oauth2/**",
+                            "/login/**",
                             "/login/oauth2/code/**",
+                            "/favicon.ico",
                             "/error").permitAll()
-                    .requestMatchers(HttpMethod.GET, "api/v1/boards/**").permitAll() // 게시판 조회 기능
-                    .requestMatchers("/login", "/login/**").permitAll()
 
+                    .requestMatchers(HttpMethod.GET, "/api/v1/boards/**").permitAll() // 게시판 조회 기능
 
                     // 인증된 사용자만 사용 가능 (인가, 권한 X)
                     // : HttpMethod는 선택값, URL 경로는 필수
@@ -138,18 +140,34 @@ public class WebSecurityConfig {
                     // 인가(특정 권한)된 사용자만 사용 가능
                     // : 역할에 따른 분리
                     // : HttpMethod는 선택값, URL 경로는 필수
-                    // .requestMatchers(HttpMethod.GET, "api/v1/~~").hasAnyRole("A권한", "B권한")
-                    // .requestMatchers(HttpMethod.GET, "api/v1/~~").hasRole("단일 권한")
+                    // .requestMatchers(HttpMethod.GET, "/api/v1/~~").hasAnyRole("A권한", "B권한")
+                    // .requestMatchers(HttpMethod.GET, "/api/v1/~~").hasRole("단일권한")
 
+                    /**
+                     * 인증 필요
+                     * */
                     .anyRequest().authenticated(); // 그 외에는 인증 필요
         })
                 // OAuth2 로그인 설정
+//                .oauth2Login(oauth2 -> oauth2
+//                        // OAuth2 로그인 시 사용자 정보를 가져올 때 사용할 서비스 지정
+//                        .userInfoEndpoint(userinfo ->
+//                                    userinfo.userService(customOAuth2UserService)
+//                                )
+//                        .successHandler(oAuth2AuthenticationSuccessHandler)
+//                );
                 .oauth2Login(oauth2 -> oauth2
-                        // OAuth2 로그인 시 사용자 정보를 가져올 때 사용할 서비스 지정
                         .userInfoEndpoint(userinfo ->
                                 userinfo.userService(customOAuth2UserService)
                         )
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler((request, response, exception) -> {
+                            response.setStatus(401);
+                            response.setContentType("application/json; charset=UTF-8");
+                            response.getWriter().write(
+                                    "{\"success\":false, \"message\":\"OAuth2 로그인 실패\", \"code\":\"OAUTH2_FAILURE\"}"
+                            );
+                        })
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

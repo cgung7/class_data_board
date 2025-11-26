@@ -15,20 +15,20 @@ public abstract class OAuth2UserInfo {
         this.attributes = attributes;
     }
 
-    /** provider가 주는 attributes 전체 */
+    /** provider가 주는 내부 attributes 전체 */
     public Map<String, Object> getAttributes() {
         return attributes;
     }
 
-    /** provider 별 고유 ID (sub, id 등) */
+    /* provider 별 고유 ID (sub, id 등) */
     public abstract String getId();
 
-    /** 이메일 */
+    // 이메일
     public abstract String getEmail();
 
-    /** 이름/닉네임 */
+    // 이름/닉네임
     public abstract String getName();
 
-    /** 프로플 이미지 URL (없으면 null) */
+    // 프로필 이미지 URL (없으면 null)
     public abstract String getImageUrl();
 }

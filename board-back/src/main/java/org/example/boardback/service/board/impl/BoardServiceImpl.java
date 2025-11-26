@@ -1,4 +1,4 @@
-package org.example.boardback.service.impl.board;
+package org.example.boardback.service.board.impl;
 
 import org.example.boardback.dto.ResponseDto;
 import org.example.boardback.dto.board.request.BoardCreateRequestDto;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BoardServiceImpl implements BoardService {
     @Override
-    public ResponseDto<BoardResponseDto> getBoard(Long boardId) {
+    public ResponseDto<BoardResponseDto> getBoard(String boardId) {
         return null;
     }
 

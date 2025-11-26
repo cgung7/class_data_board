@@ -8,9 +8,6 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8080';
 export const publicApi = axios.create({
   baseURL: API_BASE,
   withCredentials: true,  // refreshToken 쿠키 전달
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 export const privateApi = axios.create({
@@ -29,10 +26,10 @@ privateApi.interceptors.request.use((config) => {
   return config;
 });
 
-//? Refresh 401(만료) 처리 
+//? Refresh 401(만료) 처리
 let isRefreshing = false;
 let failQueue: Array<{
-  reslove: (token: string | null) => void;
+  resolve: (token: string | null) => void;
   reject: (err: unknown) => void;
 }> = [];
 
@@ -40,7 +37,7 @@ let failQueue: Array<{
 const processQueue = (error: unknown, token: string | null) => {
   failQueue.forEach(process => {
     if (error) process.reject(error);
-    else process.reslove(token);
+    else process.resolve(token);
   });
   failQueue = [];
 }
@@ -60,7 +57,7 @@ privateApi.interceptors.response.use(
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failQueue.push({
-            reslove: (newToken) => {
+            resolve: (newToken) => {
               if (newToken) original.headers.Authorization = `Bearer ${newToken}`;
               resolve(privateApi(original));
             },
@@ -75,12 +72,12 @@ privateApi.interceptors.response.use(
 
       try {
         const { data } = await publicApi.post("/api/v1/auth/refresh");
-        
+
         const newAccessToken = (data as any).data.accessToken;
-      
+
         // Zustand에 갱신 저장
         setAccessToken(newAccessToken);
-    
+
         // 원래 요청 재시도
         original.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return privateApi(original);

@@ -1,4 +1,4 @@
-package org.example.boardback.service.impl.board;
+package org.example.boardback.service.board.impl;
 
 import org.example.boardback.dto.ResponseDto;
 import org.example.boardback.dto.board.request.DraftCreateRequestDto;

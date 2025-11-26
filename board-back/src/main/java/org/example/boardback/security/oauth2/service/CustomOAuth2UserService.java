@@ -23,19 +23,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 // DB 사용자 생성 / 업데이트
-@Slf4j  // Simple Logging Facade for Java: 로깅 기능을 간편하게 하는 Lombok
+@Slf4j // Simple Logging Facade for Java: 로깅 기능을 간편하게 하는 Lombok 어노테이션
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    // User Entity를 Spring Security에서 사용하는 UserPrincipal로 변환하는 매퍼
+    // User 엔티티를 Spring Security에서 사용하는 UserPrincipal로 변환하는 매퍼
     private final UserPrincipalMapper userPrincipalMapper;
 
     /**
      * OAuth2 로그인 시 provider(google, kakao, naver)로부터 사용자 정보를 가져와
      *  , 프로젝트 서비스의 User 엔티티로 저장/업데이트 한 뒤
-     *  >> 최종적으로, Spring Security가 이해할 수 있는 OAuth2User(UserPrincipal) 행태로 리턴
+     *  >> 최종적으로, Spring Security가 이해할 수 있는 OAuth2User(UserPrincipal) 형태로 리턴
      * */
     @Override
     @Transactional
@@ -59,7 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private AuthProvider mapProvider(String registrationId) {
         return switch (registrationId.toLowerCase()) {
-            case "google" ->AuthProvider.GOOGLE;
+            case "google" -> AuthProvider.GOOGLE;
             case "kakao" -> AuthProvider.KAKAO;
             case "naver" -> AuthProvider.NAVER;
             default -> throw new IllegalArgumentException("지원하지 않는 provider: " + registrationId);
@@ -78,15 +78,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     /**
      * provider + providerId를 기준으로 User를 조회하여
      *
-     * 1) 이미 존재하면: 이름/이메일 등 프로필 정보를 최산 상태로 업데이트
+     * 1) 이미 존재하면: 이름/이메일 등 프로필 정보를 최신 상태로 업데이트
      * 2) 존재하지 않으면: 신규 소셜 로그인 User를 생성한 뒤 ROLE_USER 부여
      *
      * 최종적으로 User 엔티티 반환
      * */
     @Transactional
     protected User upsertUser(AuthProvider provider, OAuth2UserInfo userInfo) {
-        // 소셜 서비스에서 제공하는 고유 사용자 ID (구글 sub, 카카오 id 등)
-        String providerId =userInfo.getId();
+        // 소셜 서비으세서 제공하는 고유 사용자 ID (구글 sub, 카카오 id 등)
+        String providerId = userInfo.getId();
 
         // 소셜에서 가져온 데이터 저장
         String email = userInfo.getEmail();
@@ -105,16 +105,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .orElseGet(() -> {
                     // 2) 처음 로그인하는 유저인 경우 -> 새 User 엔티티 생성
                     User newUser = User.createOauthUser(
-                          provider,
-                          providerId,
-                          email,
-                          name
+                        provider,
+                        providerId,
+                        email,
+                        name
                     );
 
                     // 기본 권한 ROLE_USER를 DB에서 조회
                     Role userRole = roleRepository
                             .findById(RoleType.USER)
-                            .orElseThrow(() -> new IllegalArgumentException("ROLE_USER가 DB에 없습니다."));
+                            .orElseThrow(() -> new IllegalArgumentException("ROLE_USER 가 DB에 없습니다."));
 
                     // 생성된 유저에게 ROLE_USER 권한 부여
                     newUser.grantRole(userRole);

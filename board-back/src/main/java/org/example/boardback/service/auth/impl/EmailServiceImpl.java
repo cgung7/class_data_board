@@ -1,4 +1,4 @@
-package org.example.boardback.service.impl.auth;
+package org.example.boardback.service.auth.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

@@ -7,8 +7,6 @@ import org.example.boardback.dto.user.response.UserResponseDto;
 
 public interface UserService {
     ResponseDto<MeResponseDto> getMe(Long userId);
-
     ResponseDto<UserResponseDto> getUserById(Long userId);
-
     ResponseDto<UserResponseDto> updateProfile(Long userId, UserProfileUpdateRequest request);
 }

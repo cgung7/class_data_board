@@ -1,7 +1,7 @@
 import React from "react";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
+
 const FRONT_REDIRECT_URL = import.meta.env.VITE_OAUTH2_REDIRECT_URL ?? "http://localhost:5173/oauth2/callback";
 
 /**
@@ -17,7 +17,7 @@ export const SocialLoginButtons: React.FC = () => {
 
     // 실제 로그인 요청 URL 구성
     // /oauth2/authorization/google?redirect_uri=http://localhost:5173/oauth2/callback
-    // : 실제 경로값을 URL에 포함할 경우 반드시 encodeURIComponent로 URI값 변환
+    // : 실제 경로값을 URL에 포함할 경우 반드시 encodeURIComponent로 URI 값 변환
     const authUrl = `${API_BASE_URL}/oauth2/authorization/${provider}?redirect_uri=${encodeURIComponent(
       FRONT_REDIRECT_URL
     )}`;

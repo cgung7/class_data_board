@@ -51,7 +51,7 @@ public class User extends BaseTimeEntity {
     // 프로필 이미지 파일 매핑
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_file_id",
-            foreignKey = @ForeignKey(name = "fk_users_profile_file"))
+        foreignKey = @ForeignKey(name = "fk_users_profile_file"))
     private FileInfo profileFile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
