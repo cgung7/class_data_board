@@ -17,7 +17,7 @@ export default function RegisterPage() {
     confirmPassword: "",
     email: "",
     nickname: "",
-    gender: "NONE",
+    gender: "N",
     provider: "LOCAL"
   });
 
