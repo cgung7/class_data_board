@@ -14,6 +14,8 @@ export interface LoginResponse {
   accessTokenExpiresInMillis: number;
 }
 
+type Gender = "MALE" | "FEMALE" | "NONE";
+
 // 회원가입 요청
 export interface SignupRequest {
   username: string;
@@ -21,9 +23,9 @@ export interface SignupRequest {
   confirmPassword: string;
   nickname: string;
   email: string; 
-  // gender 등 추가 가능
+  gender: Gender;
+  provider: string;
 }
-
 
 export interface PasswordResetRequestDto {
   token: string;
