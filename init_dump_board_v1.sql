@@ -113,6 +113,9 @@ CREATE TABLE user_roles (
     CONSTRAINT `fk_user_role_role` FOREIGN KEY (role_name) REFERENCES roles(role_name)
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+select * from users;
+select * from roles;
+select * from user_roles;
 
 INSERT INTO user_roles (user_id, role_name) VALUES
 (1, 'ADMIN'),
